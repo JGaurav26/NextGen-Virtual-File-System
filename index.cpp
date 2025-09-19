@@ -127,3 +127,19 @@ void main(char *name)
         printf("ERROR : No manual entry available.\n");
     }
 }
+
+void DisplayHelp()
+{
+    printf("ls : To list out all files\n");
+    printf("clear : To clear console\n");
+    printf("open : To open the file\n");
+    printf("close : To close the file\n");
+    printf("closeall : To close all opened files\n");
+    printf("read : To read the contents from file\n");
+    printf("write : To write contents into file\n");
+    printf("exit : To terminate file system \n");
+    printf("stat : To display information of file jsing name\n");
+    printf("fstat : To display information of file using using file descriptor\n");
+    printf("truncate : To remove all data from file\n");
+    printf("rm : To delete the file\n");
+}
