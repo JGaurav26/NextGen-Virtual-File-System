@@ -38,3 +38,22 @@ typedef struct inode
     int permission; // 1 2 3
     struct inode *next;
 } INODE, *PINODE, **PPINODE;    
+
+typedef struct filetable
+{
+    int readoffest;
+    int writeoffset;
+    int count;
+    int mode; // 1 2 3
+    PINODE ptrinode;
+} FILETABLE, *PFILETABLE;
+
+typedef struct ufdt
+{
+    PFILETABLE ptrfiletable;
+} UFDT;
+
+UFDT UFDTArr[50];
+SUPERBLOCK SUPERBLOCKObj;
+PINODE head = NULL;
+
