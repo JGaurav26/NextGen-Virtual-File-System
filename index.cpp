@@ -163,5 +163,21 @@ int GetFDFromName(char *name)
     if(i == 50) return -1;
     else return i;
 
-    
+}
+
+PINODE Get_Inode(char *name)
+{
+    PINODE temp = head;
+    int i = 0;
+
+    if(name == NULL)
+        return NULL;
+
+    while(temp != NULL)
+    {
+        if(strcmp(name, temp->FileName) == 0)
+            break;
+        temp = temp -> next;
+    }
+    return temp;
 }
