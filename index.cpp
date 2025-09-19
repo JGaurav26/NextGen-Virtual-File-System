@@ -27,7 +27,7 @@ typedef struct superblock
 
 typedef struct inode
 {
-    char Filename[50];
+    char FileName[50];
     int InodeNumber;
     int FileSize;
     int FileActualSize;
@@ -141,5 +141,27 @@ void DisplayHelp()
     printf("stat : To display information of file jsing name\n");
     printf("fstat : To display information of file using using file descriptor\n");
     printf("truncate : To remove all data from file\n");
-    printf("rm : To delete the file\n");
+    printf("rm : To delete the file\n"); 
+}
+
+int GetFDFromName(char *name)
+{
+    int i = 0;
+
+    while(i < 50)
+    {
+        if(UFDTArr[i].ptrfiletable != NULL)
+        {
+            if(strcmp((UFDTArr[i].ptrfiletable -> ptrinode -> FileName), name) == 0)
+            {
+                break;
+            }
+            i++;
+        }
+    }
+
+    if(i == 50) return -1;
+    else return i;
+
+    
 }
