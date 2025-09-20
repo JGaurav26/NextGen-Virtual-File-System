@@ -216,3 +216,16 @@ void CreateDILB()
     }
     printf("DILB create successfully\n");
 }
+
+void InitialiseSuperBlock()
+{
+    int i = 0;
+    while(i < MAXINODE)
+    {
+        UFDTArr[i].ptrfiletable = NULL;
+        i++;
+    }
+
+    SUPERBLOCKObj.TotalINodes = MAXINODE;
+    SUPERBLOCKObj.FreeInode = MAXINODE;
+}
