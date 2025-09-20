@@ -321,3 +321,17 @@ int ReadFile(int fd, char * arr, int isize)
     }
     return isize;
 }
+
+int WriteFile(int fd, char * arr, int isize)
+{
+    if(((UFDTArr[fd].ptrfiletable -> mode) != WRITE) && ((UFDTArr[fd].ptrfiletable -> mode != READ+WRITE))) return -1;
+    if((UFDTArr[fd].ptrfiletable -> ptrinode -> permission != WRITE) && (UFDTArr[fd].ptrfiletable -> ptrinode ->permission != READ+WRITE)) return -1;
+    if(UFDTArr[fd].ptrfiletable -> writeoffset == MAXFILESIZE) return -2;
+    if((UFDTArr[fd].ptrfiletable -> ptrinode -> FileType != REGULAR)) return -3;
+    strncpy((UFDTArr[fd].ptrfiletable -> ptrinode -> Buffer) + (UFDTArr[fd].ptrfiletable -> writeoffset), arr, isize);
+    (UFDTArr[fd].ptrfiletable -> writeoffset) = (UFDTArr[fd].ptrfiletable -> writeoffset) + isize;
+    (UFDTArr[fd].ptrfiletable -> ptrinode -> FileActualSize) = (UFDTArr[fd].ptrfiletable -> ptrinode -> FileActualSize + isize);
+
+    return isize;
+}
+
