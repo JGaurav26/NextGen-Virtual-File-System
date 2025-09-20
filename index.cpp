@@ -298,7 +298,7 @@ int rm_File(char * name)
     (SUPERBLOCKObj.FreeInode)++;
 }
 
-int ReadFie(int fd, char * arr, int isize)
+int ReadFile(int fd, char * arr, int isize)
 {
     int read_size = 0;
     if(UFDTArr[fd].ptrfiletable == NULL) return -1;
