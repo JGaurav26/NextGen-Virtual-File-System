@@ -181,3 +181,38 @@ PINODE Get_Inode(char *name)
     }
     return temp;
 }
+
+void CreateDILB()
+{
+    int i = 1;
+    PINODE newn = NULL;
+    PINODE temp = head;
+
+    while(i < MAXINODE)
+    {
+        newn = (PINODE)malloc(sizeof(INODE));
+
+        newn -> LinkCount = 0;
+        newn -> ReferenceCount = 0;
+        newn -> FileType = 0;
+        newn -> FileSize = 0;
+
+        newn -> Buffer = NULL;
+        newn -> next = NULL;
+
+        newn -> InodeNumber = i;
+
+        if(temp == NULL)
+        {
+            head = newn;
+            temp = head;
+        }
+        else
+        {
+            temp -> next = newn;
+            temp = temp -> next;
+        }
+        i++;
+    }
+    printf("DILB create successfully\n");
+}
