@@ -229,3 +229,51 @@ void InitialiseSuperBlock()
     SUPERBLOCKObj.TotalINodes = MAXINODE;
     SUPERBLOCKObj.FreeInode = MAXINODE;
 }
+
+int CreateFile(char *name, int permission)
+{
+    int i = 0;
+    PINODE temp = head;
+
+    if((name == NULL) || (permission == 0) || (permission > 3))
+    return -1;
+
+    if(SUPERBLOCKObj.FreeInode == 0) return -2;
+
+    (SUPERBLOCKObj.FreeInode)--;
+
+    if(Get_Inode(name) != NULL)
+    return -3;
+
+    while(temp != NULL)
+    {
+        if(temp -> FileType == 0)
+            break;
+        temp = temp->next;
+    }
+
+    while(i < 50)
+    {
+        if(UFDTArr[i].ptrfiletable == NULL)
+            break;
+        i++;
+    }
+
+    UFDTArr[i].ptrfiletable = (PFILETABLE)malloc(sizeof(FILETABLE));
+    UFDTArr[i].ptrfiletable -> count = 1;
+    UFDTArr[i].ptrfiletable -> mode = permission;
+    UFDTArr[i].ptrfiletable -> readoffest = 0;
+    UFDTArr[i].ptrfiletable -> writeoffset = 0;
+    UFDTArr[i].ptrfiletable -> ptrinode = temp;
+    
+    strcpy(UFDTArr[i].ptrfiletable -> ptrinode -> FileName, name);
+    UFDTArr[i].ptrfiletable -> ptrinode -> FileType = REGULAR;
+    UFDTArr[i].ptrfiletable -> ptrinode -> ReferenceCount = 1;
+    UFDTArr[i].ptrfiletable -> ptrinode -> LinkCount = 1;
+    UFDTArr[i].ptrfiletable -> ptrinode ->  FileSize = MAXFILESIZE;
+    UFDTArr[i].ptrfiletable -> ptrinode ->  FileActualSize = 0;
+    UFDTArr[i].ptrfiletable -> ptrinode -> permission = permission;
+    UFDTArr[i].ptrfiletable -> ptrinode -> Buffer = (char *)malloc(sizeof(MAXFILESIZE));
+
+    return i;
+}
