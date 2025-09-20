@@ -277,3 +277,23 @@ int CreateFile(char *name, int permission)
 
     return i;
 }
+
+// rm_File("Demo.txt")
+int rm_File(char * name)
+{
+    int fd = 0;
+    fd = GetFDFromName(name);
+    if(fd == -1)
+        return -1;
+
+    (UFDTArr[fd].ptrfiletable -> ptrinode -> LinkCount)--;
+
+    if(UFDTArr[fd].ptrfiletable -> ptrinode -> LinkCount == 0)
+    {
+        UFDTArr[fd].ptrfiletable -> ptrinode -> FileType = 0;
+        // free(UFDTArr[fd].ptrfiletable -> ptrinode -> Buffer);
+        free(UFDTArr[fd].ptrfiletable);
+    }
+    UFDTArr[fd].ptrfiletable = NULL;
+    (SUPERBLOCKObj.FreeInode)++;
+}
