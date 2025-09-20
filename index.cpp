@@ -297,3 +297,27 @@ int rm_File(char * name)
     UFDTArr[fd].ptrfiletable = NULL;
     (SUPERBLOCKObj.FreeInode)++;
 }
+
+int ReadFile(int fd, char * arr, int isize)
+{
+    int read_size = 0;
+    if(UFDTArr[fd].ptrfiletable == NULL) return -1;
+    if(UFDTArr[fd].ptrfiletable -> mode != READ && UFDTArr[fd].ptrfiletable -> mode != READ+WRITE) return -2;
+    if(UFDTArr[fd].ptrfiletable -> ptrinode -> permission != READ && UFDTArr[fd].ptrfiletable -> ptrinode -> permission != READ+WRITE) return -2;
+    if(UFDTArr[fd].ptrfiletable -> readoffest == UFDTArr[fd].ptrfiletable -> ptrinode -> FileActualSize) return -3;
+    if(UFDTArr[fd].ptrfiletable -> ptrinode -> FileType != REGULAR) return -4;
+
+    read_size = (UFDTArr[fd].ptrfiletable -> ptrinode -> FileActualSize) - (UFDTArr[fd].ptrfiletable -> readoffest);
+
+    if(read_size < isize)
+    {
+        strncpy(arr, (UFDTArr[fd].ptrfiletable -> ptrinode -> Buffer) + (UFDTArr[fd].ptrfiletable -> readoffest), read_size);
+        UFDTArr[fd].ptrfiletable -> readoffest = UFDTArr[fd].ptrfiletable -> readoffest + read_size;
+    }
+    else
+    {
+        strncpy(arr, (UFDTArr[fd].ptrfiletable -> ptrinode -> Buffer) + (UFDTArr[fd].ptrfiletable -> readoffest), isize);
+        UFDTArr[fd].ptrfiletable -> readoffest = (UFDTArr[fd].ptrfiletable -> readoffest) + isize; 
+    }
+    return isize;
+}
