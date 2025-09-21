@@ -273,7 +273,7 @@ int CreateFile(char *name, int permission)
     UFDTArr[i].ptrfiletable -> ptrinode ->  FileSize = MAXFILESIZE;
     UFDTArr[i].ptrfiletable -> ptrinode ->  FileActualSize = 0;
     UFDTArr[i].ptrfiletable -> ptrinode -> permission = permission;
-    UFDTArr[i].ptrfiletable -> ptrinode -> Buffer = (char *)malloc(sizeof(MAXFILESIZE));
+    UFDTArr[i].ptrfiletable -> ptrinode -> Buffer = (char *)malloc(MAXFILESIZE);
 
     return i;
 }
