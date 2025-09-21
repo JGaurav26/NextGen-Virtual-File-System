@@ -153,11 +153,9 @@ int GetFDFromName(char *name)
         if(UFDTArr[i].ptrfiletable != NULL)
         {
             if(strcmp((UFDTArr[i].ptrfiletable -> ptrinode -> FileName), name) == 0)
-            {
                 break;
-            }
-            i++;
         }
+        i++;
     }
 
     if(i == 50) return -1;
