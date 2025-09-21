@@ -398,3 +398,18 @@ int CloseFileByName(char * name)
     return 0;
 }
 
+void CloseAllFile()
+{
+    int i = 0;
+    while(i < 50)
+    {
+        if(UFDTArr[i].ptrfiletable != NULL)
+        {
+            UFDTArr[i].ptrfiletable -> readoffest = 0;
+            UFDTArr[i].ptrfiletable -> writeoffset = 0;
+            (UFDTArr[i].ptrfiletable -> ptrinode -> ReferenceCount)--;
+            break;
+        }
+        i++;
+    }
+}
