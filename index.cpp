@@ -473,3 +473,26 @@ int LseekFile(int fd, int size, int from)
         }
     }
 }
+
+void Ls_file()
+{
+    int i = 0;
+    PINODE temp = head;
+    if(SUPERBLOCKObj.FreeInode == MAXINODE)
+    {
+        printf("Error : There are no files \n");
+        return;
+    }
+    printf("\nFile Name\tInode number\tFile size\tLink Count\n");
+    printf("----------------------------------------------------------------------------\n");
+
+    while(temp != NULL)
+    {
+        if(temp -> FileType != 0)
+        {
+            printf("%s\t\t%d\t\t%d\t\t%d\n", temp->FileName, temp->InodeNumber, temp->FileActualSize);
+        }
+        temp = temp -> next;
+    }
+    printf("----------------------------------------------------------------------------\n");
+}
