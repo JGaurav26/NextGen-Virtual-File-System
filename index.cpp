@@ -661,7 +661,7 @@ int main()
             }
             else if(strcmp(command[0], "man") == 0)
             {
-                man(command[1]);
+                main(command[1]);
             }
             else if(strcmp(command[0], "write") == 0)
             {
