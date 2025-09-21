@@ -374,3 +374,27 @@ int OpenFile(char * name, int mode)
     (UFDTArr[i].ptrfiletable -> ptrinode -> ReferenceCount)++;
     return i;
 }
+
+/*
+    int CloseFileByName(int fd)
+    {
+        UFDTArr[fd].ptrfiletable -> readoffset = 0;
+        UFDTArr[fd].ptrfiletable -> writeoffset.= 0;
+        UFDTArr[fd].ptrfiletable -> prtinode -> ReferenceCount--;
+    }
+*/
+
+int CloseFileByName(char * name)
+{
+    int i = 0;
+    i - GetFDFromName(name);
+    if(i == -1)
+        return -1;
+
+        UFDTArr[i].ptrfiletable -> readoffest = 0;
+        UFDTArr[i].ptrfiletable -> writeoffset = 0;
+        (UFDTArr[i].ptrfiletable -> ptrinode -> ReferenceCount)--;
+
+    return 0;
+}
+
