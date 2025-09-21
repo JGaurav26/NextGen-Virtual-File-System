@@ -559,3 +559,15 @@ int stat_file(char * name)
 
     return 0;
 }
+
+int truncate_File(char *name)
+{
+    int fd = GetFDFromName(name);
+    if(fd == -1)
+    return -1;
+
+    memset(UFDTArr[fd].ptrfiletable -> ptrinode -> Buffer, 0, 1024);
+    UFDTArr[fd].ptrfiletable -> readoffest = 0;
+    UFDTArr[fd].ptrfiletable -> writeoffset = 0;
+    UFDTArr[fd].ptrfiletable -> ptrinode -> FileActualSize = 0;
+}
