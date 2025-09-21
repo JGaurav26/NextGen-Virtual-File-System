@@ -413,3 +413,63 @@ void CloseAllFile()
         i++;
     }
 }
+
+int LseekFile(int fd, int size, int from)
+{
+    if((fd < 0) || (from > 2)) return -1;
+
+    if((UFDTArr[fd].ptrfiletable == NULL)) return -1;
+
+    if((UFDTArr[fd].ptrfiletable -> mode == READ) || (UFDTArr[fd].ptrfiletable -> mode = READ+WRITE))
+    {
+        if(from == CURRENT)
+        {
+            if(((UFDTArr[fd].ptrfiletable -> readoffest + size) > (UFDTArr[fd].ptrfiletable -> ptrinode -> FileActualSize))) return -1;
+                if(((UFDTArr[fd].ptrfiletable -> readoffest) + size) > (UFDTArr[fd].ptrfiletable -> ptrinode -> FileActualSize)) return -1;
+                if(((UFDTArr[fd].ptrfiletable -> readoffest) + size) < 0) return -1;
+                (UFDTArr[fd].ptrfiletable -> readoffest) = (UFDTArr[fd].ptrfiletable -> readoffest) + size;
+        }
+        else if(from == START)
+        {
+            if(size > (UFDTArr[fd].ptrfiletable -> ptrinode -> FileActualSize)) return -1;
+            {
+                if(size > (UFDTArr[fd].ptrfiletable -> ptrinode -> FileActualSize)) return -1;
+                if(size < 0) return -1;
+                (UFDTArr[fd].ptrfiletable -> readoffest) = size;
+            }
+        }
+        else if(from == END)
+        {
+            if((UFDTArr[fd].ptrfiletable -> ptrinode -> FileActualSize) + size > MAXFILESIZE) return -1;
+            if(((UFDTArr[fd].ptrfiletable -> readoffest) + size) < 0) return -1;
+            (UFDTArr[fd].ptrfiletable -> readoffest) = (UFDTArr[fd].ptrfiletable -> ptrinode -> FileActualSize) + size;
+        }
+    }
+
+    else if(UFDTArr[fd].ptrfiletable -> mode == WRITE)
+    {
+        if(from == CURRENT)
+        {
+            if(((UFDTArr[fd].ptrfiletable -> writeoffset) + size) > MAXFILESIZE) return -1;
+            if(((UFDTArr[fd].ptrfiletable -> writeoffset) + size) < 0) return -1;
+            if(((UFDTArr[fd].ptrfiletable -> writeoffset) + size) > (UFDTArr[fd].ptrfiletable -> ptrinode -> FileActualSize))
+                (UFDTArr[fd].ptrfiletable -> ptrinode -> FileActualSize) = (UFDTArr[fd].ptrfiletable -> writeoffset) + size;
+                (UFDTArr[fd].ptrfiletable -> writeoffset) = (UFDTArr[fd].ptrfiletable -> writeoffset) + size;
+        }
+        else if(from == START)
+        {
+            if(size > MAXFILESIZE) return -1;
+            if(size < 0) return -1;
+            if(size > (UFDTArr[fd].ptrfiletable -> ptrinode -> FileActualSize))
+                (UFDTArr[fd].ptrfiletable -> ptrinode -> FileActualSize) = size;
+                (UFDTArr[fd].ptrfiletable -> writeoffset) = size;
+        }
+        else if(from == END)
+        {
+            if((UFDTArr[fd].ptrfiletable -> ptrinode -> FileActualSize) + size > MAXFILESIZE)
+            return -1;
+            if(((UFDTArr[fd].ptrfiletable -> writeoffset) + size) < 0) return -1;
+            (UFDTArr[fd].ptrfiletable -> writeoffset) = (UFDTArr[fd].ptrfiletable -> ptrinode -> FileActualSize) + size;
+        }
+    }
+}
