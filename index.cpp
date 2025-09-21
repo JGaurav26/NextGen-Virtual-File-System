@@ -153,11 +153,9 @@ int GetFDFromName(char *name)
         if(UFDTArr[i].ptrfiletable != NULL)
         {
             if(strcmp((UFDTArr[i].ptrfiletable -> ptrinode -> FileName), name) == 0)
-            {
                 break;
-            }
-            i++;
         }
+        i++;
     }
 
     if(i == 50) return -1;
@@ -273,7 +271,7 @@ int CreateFile(char *name, int permission)
     UFDTArr[i].ptrfiletable -> ptrinode ->  FileSize = MAXFILESIZE;
     UFDTArr[i].ptrfiletable -> ptrinode ->  FileActualSize = 0;
     UFDTArr[i].ptrfiletable -> ptrinode -> permission = permission;
-    UFDTArr[i].ptrfiletable -> ptrinode -> Buffer = (char *)malloc(sizeof(MAXFILESIZE));
+    UFDTArr[i].ptrfiletable -> ptrinode -> Buffer = (char *)malloc(MAXFILESIZE);
 
     return i;
 }
@@ -387,7 +385,7 @@ int OpenFile(char * name, int mode)
 int CloseFileByName(char * name)
 {
     int i = 0;
-    i - GetFDFromName(name);
+    i = GetFDFromName(name);
     if(i == -1)
         return -1;
 
@@ -420,7 +418,7 @@ int LseekFile(int fd, int size, int from)
 
     if((UFDTArr[fd].ptrfiletable == NULL)) return -1;
 
-    if((UFDTArr[fd].ptrfiletable -> mode == READ) || (UFDTArr[fd].ptrfiletable -> mode = READ+WRITE))
+    if((UFDTArr[fd].ptrfiletable -> mode == READ) || (UFDTArr[fd].ptrfiletable -> mode == READ+WRITE))
     {
         if(from == CURRENT)
         {
@@ -490,7 +488,7 @@ void Ls_file()
     {
         if(temp -> FileType != 0)
         {
-            printf("%s\t\t%d\t\t%d\t\t%d\n", temp->FileName, temp->InodeNumber, temp->FileActualSize);
+            printf("%s\t\t%d\t\t%d\t\t%d\n", temp->FileName, temp->InodeNumber, temp->FileActualSize, temp->LinkCount);
         }
         temp = temp -> next;
     }
@@ -661,7 +659,7 @@ int main()
             }
             else if(strcmp(command[0], "man") == 0)
             {
-                man(command[1]);
+                main(command[1]);
             }
             else if(strcmp(command[0], "write") == 0)
             {
