@@ -496,3 +496,31 @@ void Ls_file()
     }
     printf("----------------------------------------------------------------------------\n");
 }
+
+int fstat_file(int fd)
+{
+    PINODE temp = head;
+    int i = 0;
+    if(fd < 0) return -1;
+    if(UFDTArr[fd].ptrfiletable == NULL) return -2;
+
+    temp = UFDTArr[fd].ptrfiletable -> ptrinode;
+
+    printf("\n-----Statistical Information about file-----\n");
+    printf("File name : %s\n", temp->FileName);
+    printf("Inode Number %d\n", temp->InodeNumber);
+    printf("File size : %d\n", temp->FileSize);
+    printf("Actual File Size : %d\n", temp->FileActualSize);
+    printf("Link count : %d\n", temp->LinkCount);
+    printf("Reference count : %d\n", temp->ReferenceCount);
+
+    if(temp -> permission == 1)
+    printf("File Permission : Read only\n");
+    else if(temp -> permission == 2)
+    printf("File Permission : Write\n");
+    else if(temp -> permission == 3)
+    printf("File Permission : Read & Write\n");
+    printf("----------------------------------------------------------------------------\n");
+
+    return 0;
+}
