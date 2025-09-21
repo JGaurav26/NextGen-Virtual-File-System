@@ -420,7 +420,7 @@ int LseekFile(int fd, int size, int from)
 
     if((UFDTArr[fd].ptrfiletable == NULL)) return -1;
 
-    if((UFDTArr[fd].ptrfiletable -> mode == READ) || (UFDTArr[fd].ptrfiletable -> mode = READ+WRITE))
+    if((UFDTArr[fd].ptrfiletable -> mode == READ) || (UFDTArr[fd].ptrfiletable -> mode == READ+WRITE))
     {
         if(from == CURRENT)
         {
