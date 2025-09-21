@@ -488,7 +488,7 @@ void Ls_file()
     {
         if(temp -> FileType != 0)
         {
-            printf("%s\t\t%d\t\t%d\t\t%d\n", temp->FileName, temp->InodeNumber, temp->FileActualSize);
+            printf("%s\t\t%d\t\t%d\t\t%d\n", temp->FileName, temp->InodeNumber, temp->FileActualSize, temp->LinkCount);
         }
         temp = temp -> next;
     }
