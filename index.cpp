@@ -387,7 +387,7 @@ int OpenFile(char * name, int mode)
 int CloseFileByName(char * name)
 {
     int i = 0;
-    i - GetFDFromName(name);
+    i = GetFDFromName(name);
     if(i == -1)
         return -1;
 
