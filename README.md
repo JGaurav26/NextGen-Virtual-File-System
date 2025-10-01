@@ -68,7 +68,7 @@ It serves as a **hands-on tool** to learn how file systems are structured and ho
 5. Display results on CLI  
 
 ---
-
+<!--
 ## 📸 Demo
 Add screenshots here to showcase:
 - File creation & manipulation  
@@ -76,8 +76,8 @@ Add screenshots here to showcase:
 - System call handling  
 
 *(Tip: Use `![Alt text](image.png)` to add screenshots once you push them into the repo)*
-
 ---
+-->
 
 ## 📚 References
 - *Advanced Programming in the UNIX Environment* – W. Richard Stevens  
