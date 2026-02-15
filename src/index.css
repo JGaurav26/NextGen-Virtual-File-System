@@ -1,0 +1,165 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    /* Terminal Dark Theme */
+    --background: 220 13% 8%;
+    --foreground: 140 100% 85%;
+
+    --card: 220 13% 10%;
+    --card-foreground: 140 100% 85%;
+
+    --popover: 220 13% 10%;
+    --popover-foreground: 140 100% 85%;
+
+    /* Neon Green - Primary */
+    --primary: 140 100% 50%;
+    --primary-foreground: 220 13% 8%;
+    --primary-glow: 140 100% 60%;
+
+    /* Dark Blue - Secondary */
+    --secondary: 210 100% 15%;
+    --secondary-foreground: 190 100% 70%;
+
+    /* Muted terminal colors */
+    --muted: 220 13% 12%;
+    --muted-foreground: 140 20% 60%;
+
+    /* Cyan - Accent */
+    --accent: 190 100% 50%;
+    --accent-foreground: 220 13% 8%;
+
+    /* Red - Error */
+    --destructive: 0 100% 50%;
+    --destructive-foreground: 0 0% 100%;
+
+    /* Yellow - Warning */
+    --warning: 50 100% 50%;
+    --warning-foreground: 220 13% 8%;
+
+    /* Border and inputs */
+    --border: 140 50% 25%;
+    --input: 220 13% 12%;
+    --ring: 140 100% 50%;
+
+    --radius: 0.25rem;
+
+    /* Terminal specific colors */
+    --terminal-bg: 220 13% 8%;
+    --terminal-text: 140 100% 85%;
+    --terminal-cursor: 140 100% 50%;
+    --terminal-success: 140 100% 50%;
+    --terminal-error: 0 100% 50%;
+    --terminal-info: 190 100% 50%;
+    --terminal-warning: 50 100% 50%;
+
+    /* Gradients */
+    --gradient-glow: linear-gradient(135deg, hsl(140 100% 50% / 0.2), hsl(190 100% 50% / 0.2));
+    
+    /* Shadows with glow */
+    --shadow-glow-green: 0 0 20px hsl(140 100% 50% / 0.5);
+    --shadow-glow-cyan: 0 0 20px hsl(190 100% 50% / 0.5);
+    --shadow-glow-yellow: 0 0 20px hsl(50 100% 50% / 0.5);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Courier New', 'Consolas', 'Monaco', monospace;
+  }
+
+  /* Custom scrollbar for terminal feel */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: hsl(var(--terminal-bg));
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: hsl(var(--primary) / 0.3);
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--primary) / 0.5);
+  }
+}
+
+@layer utilities {
+  /* Glowing text effects */
+  .text-glow-green {
+    text-shadow: 0 0 10px hsl(140 100% 50% / 0.8), 0 0 20px hsl(140 100% 50% / 0.5);
+  }
+
+  .text-glow-cyan {
+    text-shadow: 0 0 10px hsl(190 100% 50% / 0.8), 0 0 20px hsl(190 100% 50% / 0.5);
+  }
+
+  .text-glow-yellow {
+    text-shadow: 0 0 10px hsl(50 100% 50% / 0.8), 0 0 20px hsl(50 100% 50% / 0.5);
+  }
+
+  /* Blinking cursor animation */
+  @keyframes blink {
+    0%, 49% { opacity: 1; }
+    50%, 100% { opacity: 0; }
+  }
+
+  .cursor-blink {
+    animation: blink 1s infinite;
+  }
+
+  /* Terminal scan line effect */
+  @keyframes scan {
+    0% { transform: translateY(-100%); }
+    100% { transform: translateY(100%); }
+  }
+
+  .scan-line {
+    animation: scan 8s linear infinite;
+  }
+
+  /* Fade in animation for terminal lines */
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-fade-in-up {
+    animation: fadeInUp 0.3s ease-out;
+  }
+
+  /* Glowing border */
+  .border-glow {
+    box-shadow: 0 0 10px hsl(var(--primary) / 0.5), inset 0 0 10px hsl(var(--primary) / 0.1);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}

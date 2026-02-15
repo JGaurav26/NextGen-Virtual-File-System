@@ -1,101 +1,73 @@
-<p align="center">
-  <img src="https://img.shields.io/badge/Project-NextGen%20Virtual%20File%20System-green?style=for-the-badge&logo=linux" alt="NVFS Logo">
-</p>
+# Welcome to your Lovable project
 
-<h1 align="center">📂 NextGen Virtual File System (NVFS) 📂</h1>
+## Project info
 
-<p align="center">
-  <b>A C-based system programming project that emulates core functionalities of UNIX-like file systems.</b>  
-</p>
+**URL**: https://lovable.dev/projects/509df011-b065-4114-a23e-c510df350589
 
-<p align="center">
-  <img src="https://img.shields.io/badge/Language-C-blue?style=flat-square&logo=c" alt="Language">  
-  <img src="https://img.shields.io/badge/Platform-Windows%20%7C%20Linux-lightgrey?style=flat-square&logo=linux" alt="Platform">  
-  <img src="https://img.shields.io/badge/Status-Completed-success?style=flat-square" alt="Status">  
-</p>
+## How can I edit this code?
 
----
+There are several ways of editing your application.
 
-## 🚀 Features
-- Emulation of **file system data structures**:  
-  - Inode Table  
-  - File Table  
-  - User File Descriptor Table (UAREA)  
-  - Superblock  
-  - Disk Inode List Block  
-  - Data Blocks & Boot Block  
+**Use Lovable**
 
-- Implementation of **system calls**:  
-  `open`, `close`, `read`, `write`, `lseek`, `stat`, `chmod`, `unlink`
+Simply visit the [Lovable Project](https://lovable.dev/projects/509df011-b065-4114-a23e-c510df350589) and start prompting.
 
-- Support for UNIX-like **commands**:  
-  `ls`, `ls -l`, `ls -a`, `rm`, `cat`, `cd`, `chmod`, `cp`, `df`, `find`, `grep`, `ln`, `mkdir`, `pwd`, `touch`, `uname`, `man`, `mkfs`
+Changes made via Lovable will be committed automatically to this repo.
 
-- Demonstrates **internal working** of system calls and commands  
-- Lightweight **learning tool** for File System architecture & algorithms  
+**Use your preferred IDE**
 
----
+If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
 
-## 🛠️ Technology Stack
-- **Language:** C (System Programming)  
-- **Platform:** Windows NT / Linux distributions  
-- **Architecture:** Intel 32-bit processor  
-- **Interface:** Command-Line Interface (CLI)  
+The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
 
----
+Follow these steps:
 
-## 📖 Project Overview
-NVFS replicates the **behavior of UNIX File Systems** in a virtual environment, storing and manipulating records in **primary storage (RAM)**.  
-It serves as a **hands-on tool** to learn how file systems are structured and how system calls interact with underlying data structures.  
+```sh
+# Step 1: Clone the repository using the project's Git URL.
+git clone <YOUR_GIT_URL>
 
----
+# Step 2: Navigate to the project directory.
+cd <YOUR_PROJECT_NAME>
 
-## 📂 Data Structures
-- **Inode** – Represents files and metadata  
-- **File Table** – Tracks open files  
-- **User File Descriptor Table (UAREA)** – Maps user processes to files  
-- **Superblock** – Contains global FS metadata  
-- **Disk Inode List Block** – Manages inode storage  
-- **Data Blocks** – Store actual file content  
+# Step 3: Install the necessary dependencies.
+npm i
 
----
+# Step 4: Start the development server with auto-reloading and an instant preview.
+npm run dev
+```
 
-## 📊 Project Flow
-1. Initialize core data structures  
-2. Create & manage files/directories  
-3. Execute file system commands  
-4. Handle system calls internally  
-5. Display results on CLI  
+**Edit a file directly in GitHub**
 
----
-<!--
-## 📸 Demo
-Add screenshots here to showcase:
-- File creation & manipulation  
-- Directory operations  
-- System call handling  
+- Navigate to the desired file(s).
+- Click the "Edit" button (pencil icon) at the top right of the file view.
+- Make your changes and commit the changes.
 
-*(Tip: Use `![Alt text](image.png)` to add screenshots once you push them into the repo)*
----
--->
+**Use GitHub Codespaces**
 
-## 📚 References
-- *Advanced Programming in the UNIX Environment* – W. Richard Stevens  
-- UNIX File System documentation  
+- Navigate to the main page of your repository.
+- Click on the "Code" button (green button) near the top right.
+- Select the "Codespaces" tab.
+- Click on "New codespace" to launch a new Codespace environment.
+- Edit files directly within the Codespace and commit and push your changes once you're done.
 
----
+## What technologies are used for this project?
 
-## 💡 Possible Improvements
-- GUI-based interface for visualization  
-- 64-bit platform support  
-- Extension to persistent storage instead of primary memory  
+This project is built with:
 
----
+- Vite
+- TypeScript
+- React
+- shadcn-ui
+- Tailwind CSS
 
-## 📌 Usage
-```bash
-# Compile
-g++ nvfs.c -o nvfs
+## How can I deploy this project?
 
-# Run
-./nvfs
+Simply open [Lovable](https://lovable.dev/projects/509df011-b065-4114-a23e-c510df350589) and click on Share -> Publish.
+
+## Can I connect a custom domain to my Lovable project?
+
+Yes, you can!
+
+To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+
+Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
