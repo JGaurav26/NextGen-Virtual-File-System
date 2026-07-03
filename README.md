@@ -9,11 +9,10 @@
 **NextGen Virtual File System (NVFS)** is an educational in-memory virtual file system that simulates POSIX-style file system structures and operations. It features a complete **C++ Core Simulation Console** and a corresponding **Interactive React + TypeScript Terminal Web Dashboard** that visualizes file system stats, structures, and CLI commands directly in the browser.
 
 🔗 **Live Web Demo**: [https://neon-vfs-console.lovable.app/](https://neon-vfs-console.lovable.app/)  
-🛠️ **Project Workspace on Lovable**: [Lovable Project URL](https://lovable.dev/projects/509df011-b065-4114-a23e-c510df350589)
 
 ---
 
-## 📸 Screenshots & Interface
+## Interface
 
 The frontend dashboard provides a cyberpunk-style retro CRT terminal interface containing:
 *   **Live CLI Console**: Run all virtual commands, navigate with Up/Down arrow keys for history, and see output lines color-coded by status.
@@ -22,7 +21,7 @@ The frontend dashboard provides a cyberpunk-style retro CRT terminal interface c
 
 ---
 
-## 🏗️ Architectural Concept & System Design
+## Architectural Concept & System Design
 
 The virtual file system simulates real-world operating system file management concepts by allocating memory buffers in a structured in-memory table.
 
@@ -144,6 +143,6 @@ Open `http://localhost:5173` (or the port specified in terminal) in your browser
 
 ## 🧑‍💻 Developed By
 
-*   **Gaurav Jadhav** (Information Technology Department)
+*   **Gaurav Jadhav** 
 
 If you find this project educational or useful, feel free to give the repository a ⭐!
