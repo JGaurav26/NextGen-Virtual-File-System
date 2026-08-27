@@ -5,6 +5,25 @@ import { ChevronRight, Terminal as TerminalIcon, HelpCircle } from "lucide-react
 import { toast } from "sonner";
 import StatsPanel from "./StatsPanel";
 import HelpSidebar from "./HelpSidebar";
+import InspectorPanel from "./InspectorPanel";
+import { modeLabel } from "@/lib/nvfs";
+
+const MAN: Record<string, string[]> = {
+  create: ["Allocate inode + namespace name, then open an FD.", "Usage: create <filename> <permission>  (1=R 2=W 3=RW)"],
+  open: ["Add a UFDT slot for an existing name.", "Usage: open <filename> <mode>"],
+  close: ["Remove one UFDT entry; decrement inode refs.", "Usage: close <filename>"],
+  closeall: ["Close every descriptor in the UFDT.", "Usage: closeall"],
+  write: ["Copy bytes at the write offset (file must be open for write).", "Usage: write <filename> <data>"],
+  read: ["Copy bytes from the read offset (file must be open for read).", "Usage: read <filename> <bytes>"],
+  lseek: ["Reposition read/write offsets.", "Usage: lseek <filename> <offset> <from>", "from: 0=START 1=CURRENT 2=END"],
+  link: ["Second directory name for the same inode (nlink++).", "Usage: link <old> <new>"],
+  rm: ["Unlink a name. Free inode only when nlink=0 and refs=0.", "Usage: rm <filename>"],
+  stat: ["Print inode fields by name.", "Usage: stat <filename>"],
+  fstat: ["Print inode + file-table offsets by FD.", "Usage: fstat <fd>"],
+  truncate: ["Zero file data; reset offsets on all FDs for that inode.", "Usage: truncate <filename>"],
+  ls: ["List namespace entries.", "Usage: ls"],
+  info: ["Superblock totals.", "Usage: info"],
+};
 
 interface OutputLine {
   id: number;
@@ -38,12 +57,13 @@ const Terminal = () => {
     {
       id: 4,
       type: "warning",
-      text: "Type 'help' for available commands",
+      text: "Type 'help' · kernel: create/open/close/lseek/link/fstat  · watch tables below",
     },
   ]);
   const [commandHistory, setCommandHistory] = useState<string[]>([]);
   const [historyIndex, setHistoryIndex] = useState(-1);
   const [showHelp, setShowHelp] = useState(false);
+  const [tick, setTick] = useState(0);
   const nvfsRef = useRef(new NVFS());
   const outputEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -95,15 +115,16 @@ const Terminal = () => {
           addOutput("warning", "No files in the system");
         } else {
           addOutput("info", "╔════════════════════════════════════════════════════════════════════╗");
-          addOutput("info", "║ File Name       Inode    Size      Links    Created On            ║");
+          addOutput("info", "║ Name           Inode   Size     nlink  refs  Created              ║");
           addOutput("info", "╠════════════════════════════════════════════════════════════════════╣");
           files.forEach((file) => {
-            const name = file.fileName.padEnd(15);
-            const inode = file.inodeNumber.toString().padEnd(8);
-            const size = file.fileActualSize.toString().padEnd(9);
-            const links = file.linkCount.toString().padEnd(8);
-            const date = file.creationTime.toLocaleTimeString().padEnd(18);
-            addOutput("output", `║ ${name} ${inode} ${size} ${links} ${date} ║`);
+            const name = file.fileName.padEnd(14);
+            const inode = file.inodeNumber.toString().padEnd(7);
+            const size = file.fileActualSize.toString().padEnd(8);
+            const links = file.linkCount.toString().padEnd(6);
+            const refs = file.referenceCount.toString().padEnd(5);
+            const date = file.creationTime.toLocaleTimeString().padEnd(12);
+            addOutput("output", `║ ${name} ${inode} ${size} ${links} ${refs} ${date} ║`);
           });
           addOutput("info", "╚════════════════════════════════════════════════════════════════════╝");
         }
@@ -186,7 +207,8 @@ const Terminal = () => {
             addOutput("info", `║ Inode Number    : ${result.info.inodeNumber.toString().padEnd(19)}║`);
             addOutput("info", `║ File Size       : ${result.info.fileActualSize.toString().padEnd(19)}║`);
             addOutput("info", `║ Link Count      : ${result.info.linkCount.toString().padEnd(19)}║`);
-            addOutput("info", `║ Permission      : ${result.info.permission.toString().padEnd(19)}║`);
+            addOutput("info", `║ Ref Count       : ${result.info.referenceCount.toString().padEnd(19)}║`);
+            addOutput("info", `║ Permission      : ${modeLabel(result.info.permission).padEnd(19)}║`);
             addOutput("info", `║ Created         : ${result.info.creationTime.toLocaleString().padEnd(19)}║`);
             addOutput("info", "╚════════════════════════════════════════╝");
           } else {
@@ -223,11 +245,103 @@ const Terminal = () => {
         }
         break;
 
+      case "closeall":
+        {
+          const result = nvfsRef.current.closeAll();
+          addOutput("success", result.message);
+        }
+        break;
+
+      case "open":
+        if (parts.length !== 3) {
+          addOutput("error", "Usage: open <filename> <mode>");
+          addOutput("error", "Mode: 1=READ, 2=WRITE, 3=READ+WRITE");
+        } else {
+          const result = nvfsRef.current.openFile(parts[1], parseInt(parts[2], 10));
+          if (result.success) {
+            addOutput("success", result.message);
+            toast.success(result.message);
+          } else {
+            addOutput("error", result.message);
+            toast.error(result.message);
+          }
+        }
+        break;
+
+      case "link":
+        if (parts.length !== 3) {
+          addOutput("error", "Usage: link <oldname> <newname>");
+        } else {
+          const result = nvfsRef.current.linkFile(parts[1], parts[2]);
+          if (result.success) {
+            addOutput("success", result.message);
+            toast.success(result.message);
+          } else {
+            addOutput("error", result.message);
+            toast.error(result.message);
+          }
+        }
+        break;
+
+      case "lseek":
+        if (parts.length !== 4) {
+          addOutput("error", "Usage: lseek <filename> <offset> <from>");
+          addOutput("error", "from: 0=START, 1=CURRENT, 2=END");
+        } else {
+          const result = nvfsRef.current.lseekFile(
+            parts[1],
+            parseInt(parts[2], 10),
+            parseInt(parts[3], 10),
+          );
+          if (result.success) {
+            addOutput("success", result.message);
+          } else {
+            addOutput("error", result.message);
+          }
+        }
+        break;
+
+      case "fstat":
+        if (parts.length !== 2) {
+          addOutput("error", "Usage: fstat <fd>");
+        } else {
+          const result = nvfsRef.current.fstat(parseInt(parts[1], 10));
+          if (result.success && result.info) {
+            addOutput("info", "╔════════════════════════════════════════╗");
+            addOutput("info", `║ FD ${result.info.fd}  mode ${modeLabel(result.info.mode).padEnd(28)}║`);
+            addOutput("info", "╠════════════════════════════════════════╣");
+            addOutput("info", `║ Name            : ${result.info.fileName.padEnd(19)}║`);
+            addOutput("info", `║ Inode           : ${result.info.inodeNumber.toString().padEnd(19)}║`);
+            addOutput("info", `║ Size            : ${result.info.fileActualSize.toString().padEnd(19)}║`);
+            addOutput("info", `║ nlink / refs    : ${`${result.info.linkCount} / ${result.info.referenceCount}`.padEnd(19)}║`);
+            addOutput("info", `║ r/w offsets     : ${`${result.info.readOffset} / ${result.info.writeOffset}`.padEnd(19)}║`);
+            addOutput("info", "╚════════════════════════════════════════╝");
+          } else {
+            addOutput("error", result.message);
+          }
+        }
+        break;
+
+      case "man":
+        if (parts.length !== 2) {
+          addOutput("error", "Usage: man <command>");
+        } else {
+          const pages = MAN[parts[1].toLowerCase()];
+          if (!pages) {
+            addOutput("error", `No manual entry for '${parts[1]}'`);
+          } else {
+            pages.forEach((line) => addOutput("info", line));
+          }
+        }
+        break;
+
       default:
         addOutput("error", `Command not found: ${command}`);
         addOutput("warning", "Type 'help' for available commands");
         break;
     }
+
+    setTick((n) => n + 1);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -279,39 +393,60 @@ const Terminal = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-background relative overflow-hidden">
-      {/* Scan line effect */}
+    <div className="min-h-screen flex flex-col bg-background relative overflow-hidden grid-bg">
+      <div className="absolute inset-0 pointer-events-none crt-overlay opacity-40" />
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute w-full h-1 bg-gradient-to-r from-transparent via-primary/20 to-transparent scan-line" />
+        <div className="absolute w-full h-px bg-gradient-to-r from-transparent via-primary/35 to-transparent scan-line" />
       </div>
 
-      {/* Header */}
-      <header className="border-b border-primary/30 bg-card/50 backdrop-blur-sm sticky top-0 z-10">
-        <div className="flex items-center justify-between px-6 py-4">
+      <header className="relative z-10 border-b border-primary/15 glass-panel sticky top-0">
+        <div className="flex items-center justify-between px-5 md:px-6 py-3.5">
           <div className="flex items-center gap-3">
-            <TerminalIcon className="w-6 h-6 text-primary" />
-            <h1 className="text-xl font-bold text-primary text-glow-green">NVFS Terminal</h1>
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-primary/25 bg-primary/10">
+              <TerminalIcon className="w-5 h-5 text-primary" />
+            </div>
+            <div>
+              <h1 className="text-lg font-semibold tracking-tight text-primary text-glow-green">NVFS Console</h1>
+              <p className="text-[11px] text-muted-foreground tracking-wide">
+                NextGen Virtual File System · POSIX open-file kernel
+              </p>
+            </div>
           </div>
-          <button
-            onClick={() => setShowHelp(!showHelp)}
-            className="flex items-center gap-2 px-4 py-2 rounded bg-primary/10 border border-primary/30 hover:bg-primary/20 transition-colors"
-          >
-            <HelpCircle className="w-4 h-4" />
-            <span>Help</span>
-          </button>
+          <div className="flex items-center gap-3">
+            <div className="hidden sm:flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-3 py-1.5">
+              <span className="h-1.5 w-1.5 rounded-full bg-primary pulse-soft" />
+              <span className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">Kernel online</span>
+            </div>
+            <button
+              onClick={() => setShowHelp(!showHelp)}
+              className="flex items-center gap-2 px-3.5 py-2 rounded-lg bg-primary/10 border border-primary/25 hover:bg-primary/20 transition-colors text-sm"
+            >
+              <HelpCircle className="w-4 h-4" />
+              <span>Help</span>
+            </button>
+          </div>
         </div>
       </header>
 
-      {/* Stats Panel */}
-      <StatsPanel nvfs={nvfsRef.current} />
+      <div className="relative z-10">
+        <StatsPanel nvfs={nvfsRef.current} tick={tick} />
+        <InspectorPanel nvfs={nvfsRef.current} tick={tick} />
+      </div>
 
-      {/* Main content */}
-      <div className="flex flex-1 overflow-hidden">
-        {/* Terminal */}
-        <div className="flex-1 flex flex-col p-6 overflow-hidden">
-          <div className="flex-1 bg-card border border-primary/30 rounded border-glow overflow-hidden flex flex-col">
-            {/* Output area */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-1 font-mono text-sm">
+      <div className="relative z-10 flex flex-1 overflow-hidden">
+        <div className="flex-1 flex flex-col p-4 md:p-6 overflow-hidden">
+          <div className="flex-1 bg-card/80 border border-primary/20 rounded-2xl border-glow overflow-hidden flex flex-col">
+            <div className="flex items-center justify-between border-b border-primary/15 px-4 py-2.5 bg-muted/25">
+              <div className="flex items-center gap-2">
+                <span className="h-2.5 w-2.5 rounded-full bg-[#ff5f56]" />
+                <span className="h-2.5 w-2.5 rounded-full bg-[#ffbd2e]" />
+                <span className="h-2.5 w-2.5 rounded-full bg-[#27c93f]" />
+                <span className="ml-3 text-[11px] font-mono text-muted-foreground">nvfs@localhost — bash</span>
+              </div>
+              <span className="hidden sm:inline text-[11px] font-mono text-accent/80">Fabulous NVFS :&gt;</span>
+            </div>
+
+            <div className="flex-1 overflow-y-auto p-4 md:p-5 space-y-1 font-mono text-[13px] leading-relaxed">
               <AnimatePresence>
                 {output.map((line) => (
                   <motion.div
@@ -327,11 +462,10 @@ const Terminal = () => {
               <div ref={outputEndRef} />
             </div>
 
-            {/* Input area */}
-            <form onSubmit={handleSubmit} className="border-t border-primary/30 p-4 bg-muted/30">
-              <div className="flex items-center gap-2">
+            <form onSubmit={handleSubmit} className="border-t border-primary/15 p-3.5 md:p-4 bg-muted/20">
+              <div className="flex items-center gap-2 rounded-lg border border-primary/15 bg-background/40 px-3 py-2.5">
                 <ChevronRight className="w-4 h-4 text-primary flex-shrink-0" />
-                <span className="text-accent font-mono text-sm">Fabulous NVFS :&gt;</span>
+                <span className="text-accent font-mono text-sm whitespace-nowrap">Fabulous NVFS :&gt;</span>
                 <input
                   ref={inputRef}
                   type="text"
@@ -342,13 +476,12 @@ const Terminal = () => {
                   placeholder="Type a command..."
                   autoFocus
                 />
-                <span className="w-2 h-5 bg-primary cursor-blink" />
+                <span className="w-1.5 h-5 bg-primary cursor-blink rounded-sm" />
               </div>
             </form>
           </div>
         </div>
 
-        {/* Help Sidebar */}
         <HelpSidebar show={showHelp} onClose={() => setShowHelp(false)} />
       </div>
     </div>

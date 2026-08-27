@@ -21,6 +21,8 @@ The frontend dashboard provides a cyberpunk-style retro CRT terminal interface c
 
 ---
 
+Full system design (data structures, C++ vs TypeScript kernels, command flows, and UI topology) is documented in [architecture.md](architecture.md).
+
 ## Architectural Concept & System Design
 
 The virtual file system simulates real-world operating system file management concepts by allocating memory buffers in a structured in-memory table.

@@ -1,71 +1,57 @@
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
-
 @layer base {
   :root {
-    /* Terminal Dark Theme */
-    --background: 220 13% 8%;
-    --foreground: 140 100% 85%;
+    --background: 222 47% 4%;
+    --foreground: 150 40% 92%;
 
-    --card: 220 13% 10%;
-    --card-foreground: 140 100% 85%;
+    --card: 222 40% 7%;
+    --card-foreground: 150 40% 92%;
 
-    --popover: 220 13% 10%;
-    --popover-foreground: 140 100% 85%;
+    --popover: 222 40% 7%;
+    --popover-foreground: 150 40% 92%;
 
-    /* Neon Green - Primary */
-    --primary: 140 100% 50%;
-    --primary-foreground: 220 13% 8%;
-    --primary-glow: 140 100% 60%;
+    --primary: 152 82% 52%;
+    --primary-foreground: 222 47% 4%;
+    --primary-glow: 152 90% 62%;
 
-    /* Dark Blue - Secondary */
-    --secondary: 210 100% 15%;
-    --secondary-foreground: 190 100% 70%;
+    --secondary: 210 50% 12%;
+    --secondary-foreground: 188 85% 72%;
 
-    /* Muted terminal colors */
-    --muted: 220 13% 12%;
-    --muted-foreground: 140 20% 60%;
+    --muted: 222 28% 11%;
+    --muted-foreground: 150 12% 58%;
 
-    /* Cyan - Accent */
-    --accent: 190 100% 50%;
-    --accent-foreground: 220 13% 8%;
+    --accent: 188 92% 54%;
+    --accent-foreground: 222 47% 4%;
 
-    /* Red - Error */
-    --destructive: 0 100% 50%;
+    --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    /* Yellow - Warning */
-    --warning: 50 100% 50%;
-    --warning-foreground: 220 13% 8%;
+    --warning: 38 96% 58%;
+    --warning-foreground: 222 47% 4%;
 
-    /* Border and inputs */
-    --border: 140 50% 25%;
-    --input: 220 13% 12%;
-    --ring: 140 100% 50%;
+    --border: 152 28% 18%;
+    --input: 222 28% 11%;
+    --ring: 152 82% 52%;
 
-    --radius: 0.25rem;
+    --radius: 0.75rem;
 
-    /* Terminal specific colors */
-    --terminal-bg: 220 13% 8%;
-    --terminal-text: 140 100% 85%;
-    --terminal-cursor: 140 100% 50%;
-    --terminal-success: 140 100% 50%;
-    --terminal-error: 0 100% 50%;
-    --terminal-info: 190 100% 50%;
-    --terminal-warning: 50 100% 50%;
+    --terminal-bg: 222 50% 5%;
+    --terminal-text: 150 40% 88%;
+    --terminal-cursor: 152 82% 52%;
+    --terminal-success: 152 82% 52%;
+    --terminal-error: 0 84% 62%;
+    --terminal-info: 188 92% 54%;
+    --terminal-warning: 38 96% 58%;
 
-    /* Gradients */
-    --gradient-glow: linear-gradient(135deg, hsl(140 100% 50% / 0.2), hsl(190 100% 50% / 0.2));
-    
-    /* Shadows with glow */
-    --shadow-glow-green: 0 0 20px hsl(140 100% 50% / 0.5);
-    --shadow-glow-cyan: 0 0 20px hsl(190 100% 50% / 0.5);
-    --shadow-glow-yellow: 0 0 20px hsl(50 100% 50% / 0.5);
+    --gradient-glow: linear-gradient(135deg, hsl(152 82% 52% / 0.18), hsl(188 92% 54% / 0.14));
+    --shadow-glow-green: 0 0 28px hsl(152 82% 52% / 0.28);
+    --shadow-glow-cyan: 0 0 28px hsl(188 92% 54% / 0.28);
+    --shadow-glow-yellow: 0 0 28px hsl(38 96% 58% / 0.28);
   }
 }
 
@@ -74,14 +60,31 @@ All colors MUST be HSL.
     @apply border-border;
   }
 
-  body {
-    @apply bg-background text-foreground;
-    font-family: 'Courier New', 'Consolas', 'Monaco', monospace;
+  html,
+  body,
+  #root {
+    height: 100%;
   }
 
-  /* Custom scrollbar for terminal feel */
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: "Outfit", "IBM Plex Mono", ui-sans-serif, system-ui, sans-serif;
+    background-image:
+      radial-gradient(ellipse 80% 50% at 20% -10%, hsl(152 82% 52% / 0.08), transparent),
+      radial-gradient(ellipse 60% 40% at 90% 0%, hsl(188 92% 54% / 0.06), transparent),
+      linear-gradient(hsl(var(--background)), hsl(var(--background)));
+  }
+
+  code,
+  kbd,
+  pre,
+  .font-mono {
+    font-family: "IBM Plex Mono", "Courier New", ui-monospace, monospace;
+  }
+
   ::-webkit-scrollbar {
     width: 8px;
+    height: 8px;
   }
 
   ::-webkit-scrollbar-track {
@@ -89,8 +92,9 @@ All colors MUST be HSL.
   }
 
   ::-webkit-scrollbar-thumb {
-    background: hsl(var(--primary) / 0.3);
-    border-radius: 4px;
+    background: hsl(var(--primary) / 0.28);
+    border-radius: 999px;
+    border: 2px solid hsl(var(--terminal-bg));
   }
 
   ::-webkit-scrollbar-thumb:hover {
@@ -99,44 +103,50 @@ All colors MUST be HSL.
 }
 
 @layer utilities {
-  /* Glowing text effects */
   .text-glow-green {
-    text-shadow: 0 0 10px hsl(140 100% 50% / 0.8), 0 0 20px hsl(140 100% 50% / 0.5);
+    text-shadow: 0 0 12px hsl(152 82% 52% / 0.55), 0 0 28px hsl(152 82% 52% / 0.22);
   }
 
   .text-glow-cyan {
-    text-shadow: 0 0 10px hsl(190 100% 50% / 0.8), 0 0 20px hsl(190 100% 50% / 0.5);
+    text-shadow: 0 0 12px hsl(188 92% 54% / 0.55), 0 0 28px hsl(188 92% 54% / 0.22);
   }
 
   .text-glow-yellow {
-    text-shadow: 0 0 10px hsl(50 100% 50% / 0.8), 0 0 20px hsl(50 100% 50% / 0.5);
+    text-shadow: 0 0 12px hsl(38 96% 58% / 0.55), 0 0 28px hsl(38 96% 58% / 0.22);
   }
 
-  /* Blinking cursor animation */
   @keyframes blink {
-    0%, 49% { opacity: 1; }
-    50%, 100% { opacity: 0; }
+    0%,
+    49% {
+      opacity: 1;
+    }
+    50%,
+    100% {
+      opacity: 0;
+    }
   }
 
   .cursor-blink {
-    animation: blink 1s infinite;
+    animation: blink 1.05s steps(1, end) infinite;
   }
 
-  /* Terminal scan line effect */
   @keyframes scan {
-    0% { transform: translateY(-100%); }
-    100% { transform: translateY(100%); }
+    0% {
+      transform: translateY(-120%);
+    }
+    100% {
+      transform: translateY(220%);
+    }
   }
 
   .scan-line {
-    animation: scan 8s linear infinite;
+    animation: scan 9s linear infinite;
   }
 
-  /* Fade in animation for terminal lines */
   @keyframes fadeInUp {
     from {
       opacity: 0;
-      transform: translateY(10px);
+      transform: translateY(8px);
     }
     to {
       opacity: 1;
@@ -145,21 +155,50 @@ All colors MUST be HSL.
   }
 
   .animate-fade-in-up {
-    animation: fadeInUp 0.3s ease-out;
+    animation: fadeInUp 0.28s ease-out;
   }
 
-  /* Glowing border */
+  @keyframes pulse-soft {
+    0%,
+    100% {
+      opacity: 0.55;
+    }
+    50% {
+      opacity: 1;
+    }
+  }
+
+  .pulse-soft {
+    animation: pulse-soft 2.4s ease-in-out infinite;
+  }
+
   .border-glow {
-    box-shadow: 0 0 10px hsl(var(--primary) / 0.5), inset 0 0 10px hsl(var(--primary) / 0.1);
-  }
-}
-
-@layer base {
-  * {
-    @apply border-border;
+    box-shadow:
+      0 0 0 1px hsl(var(--primary) / 0.12),
+      0 12px 40px hsl(222 47% 2% / 0.55),
+      0 0 32px hsl(var(--primary) / 0.08);
   }
 
-  body {
-    @apply bg-background text-foreground;
+  .crt-overlay {
+    background:
+      repeating-linear-gradient(
+        to bottom,
+        transparent 0px,
+        transparent 2px,
+        hsl(222 47% 2% / 0.18) 3px
+      );
+    pointer-events: none;
+  }
+
+  .grid-bg {
+    background-image:
+      linear-gradient(hsl(152 82% 52% / 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(152 82% 52% / 0.04) 1px, transparent 1px);
+    background-size: 48px 48px;
+  }
+
+  .glass-panel {
+    background: linear-gradient(180deg, hsl(222 40% 9% / 0.86), hsl(222 40% 6% / 0.92));
+    backdrop-filter: blur(18px);
   }
 }
